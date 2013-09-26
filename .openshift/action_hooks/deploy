@@ -25,22 +25,22 @@ if [ ! -f "${DRUPAL_SITE_DIR}/default/settings.php" ]
 then
 
   #
-  # Automatic installation only works with mysql.
+  # Automatic installation only works with postgresql.
   # 
-  if [ -z "$OPENSHIFT_MYSQL_DB_HOST" ]
+  if [ -z "$OPENSHIFT_POSTGRESQL_DB_HOST" ]
   then
       echo 1>&2
-      echo "Could not find mysql database. Please run:" 1>&2
-      echo "rhc cartridge add mysql -a $OPENSHIFT_APP_NAME" 1>&2
+      echo "Could not find postgresql database. Please run:" 1>&2
+      echo "rhc cartridge add postgresql -a $OPENSHIFT_APP_NAME" 1>&2
       echo "then make a sample commit (add whitespace somewhere) and re-push" 1>&2
       echo 1>&2
   fi
 
-  if [ -z "$OPENSHIFT_MYSQL_DB_HOST" ]
+  if [ -z "$OPENSHIFT_POSTGRESQL_DB_HOST" ]
   then
       exit 5
   fi
-  if [ -z "$OPENSHIFT_MYSQL_DB_PORT" ]
+  if [ -z "$OPENSHIFT_POSTGRESQL_DB_PORT" ]
   then
       exit 6
   fi
@@ -52,7 +52,7 @@ then
   echo
   echo "Creating a new Drupal site at ${DRUPAL_SITE_DIR}/default"
   echo
-  if ! drush site-install standard --site-name=${OPENSHIFT_APP_NAME} --account-pass=openshift_changeme --db-url=mysql://$OPENSHIFT_MYSQL_DB_USERNAME:$OPENSHIFT_MYSQL_DB_PASSWORD@$OPENSHIFT_MYSQL_DB_HOST:$OPENSHIFT_MYSQL_DB_PORT/$OPENSHIFT_APP_NAME --yes
+  if ! drush site-install standard --site-name=${OPENSHIFT_APP_NAME} --account-pass=openshift_changeme --db-url=pgsql://$OPENSHIFT_POSTGRESQL_DB_USERNAME:$OPENSHIFT_POSTGRESQL_DB_PASSWORD@$OPENSHIFT_POSTGRESQL_DB_HOST:$OPENSHIFT_POSTGRESQL_DB_PORT/$OPENSHIFT_APP_NAME --yes
   then
     echo "Unable to configure your Drupal installation"
     echo
@@ -87,7 +87,7 @@ $databases = array (
       'password' => $src['OPENSHIFT_MYSQL_DB_PASSWORD'],
       'host' => $src['OPENSHIFT_MYSQL_DB_HOST'],
       'port' => $src['OPENSHIFT_MYSQL_DB_PORT'],
-      'driver' => 'mysql',
+      'driver' => 'postgresql',
       'prefix' => '',
     ),
   ),
